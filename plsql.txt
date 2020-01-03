@@ -1,0 +1,298 @@
+  
+
+
+PLSQL :
+
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2  	num number := 10;
+  3  BEGIN
+  4  	DECLARE 
+  5  		num number := 20; 
+  6  	BEGIN 
+  7  		IF num = OUTER.num THEN
+  8  	      DBMS_OUTPUT.PUT_LINE('Both are same value');
+  9  	    ELSE
+ 10  	      DBMS_OUTPUT.PUT_LINE('Different value');
+ 11  	    END IF;
+ 12  	END;  
+ 13* END;
+ 14  /
+		IF num = OUTER.num THEN
+		         *
+ERROR at line 7:
+ORA-06550: line 7, column 12: 
+PLS-00201: identifier 'OUTER.NUM' must be declared 
+ORA-06550: line 7, column 3: 
+PL/SQL: Statement ignored 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2  	OUTER.num number := 10;
+  3  BEGIN
+  4  	DECLARE 
+  5  		num number := 20; 
+  6  	BEGIN 
+  7  		IF num = OUTER.num THEN
+  8  	      DBMS_OUTPUT.PUT_LINE('Both are same value');
+  9  	    ELSE
+ 10  	      DBMS_OUTPUT.PUT_LINE('Different value');
+ 11  	    END IF;
+ 12  	END;  
+ 13* END;
+SQL> /
+	OUTER.num number := 10;
+	     *
+ERROR at line 2:
+ORA-06550: line 2, column 7: 
+PLS-00103: Encountered the symbol "." when expecting one of the following: 
+constant exception <an identifier> 
+<a double-quoted delimited-identifier> table long double ref 
+char time timestamp interval date binary national character 
+nchar 
+The symbol "table was inserted before "." to continue. 
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2  	OUTER_num number := 10;
+  3  BEGIN
+  4  	DECLARE 
+  5  		num number := 20; 
+  6  	BEGIN 
+  7  		IF num = OUTER_num THEN
+  8  	      DBMS_OUTPUT.PUT_LINE('Both are same value');
+  9  	    ELSE
+ 10  	      DBMS_OUTPUT.PUT_LINE('Different value');
+ 11  	    END IF;
+ 12  	END;  
+ 13* END;
+SQL> /
+Different value                                                                 
+
+PL/SQL procedure successfully completed.
+
+
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2  a number;
+  3  b number;
+  4  c number;
+  5  FUNCTION findMax(x IN number, y IN number)
+  6  RETURN number
+  7  IS
+  8  z number;
+  9  BEGIN
+ 10  IF x > y THEN
+ 11  z:= x;
+ 12  ELSE
+ 13  Z:= y;
+ 14  END IF;
+ 15  RETURN z;
+ 16  END;
+ 17  BEGIN
+ 18  a:= 23;
+ 19  b:= 45;
+ 20  c := findMax(a, b);
+ 21  dbms_output.put_line(' Maximum of (23,45): ' || c);
+ 22* END;
+SQL> /
+Maximum of (23,45): 45                                                          
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+SQL> declare
+  2  x number;
+  3  y number;
+  4  begin
+  5  x:=&x;
+  6  y:=mod(x,2);
+  7  if (y=0) then
+  8  dbms_output.put_line('even number');
+  9  else
+ 10  dbms_output.put_line('odd number');
+ 11  end if;
+ 12  end;
+ 13  /
+Enter value for x: 79
+old   5: x:=&x;
+new   5: x:=79;
+odd number                                                                      
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+SQL> declare
+  2  x number;
+  3  i number;
+  4  y number;
+  5  begin
+  6  x:=&x;
+  7  for i in 1..10
+  8  loop
+  9  y:=x*i;
+ 10  dbms_output.put_line(x || '*' || i || '=' || y);
+ 11  end loop;
+ 12  end;
+ 13  /
+Enter value for x: 7
+old   6: x:=&x;
+new   6: x:=7;
+7*1=7                                                                           
+7*2=14                                                                          
+7*3=21                                                                          
+7*4=28                                                                          
+7*5=35                                                                          
+7*6=42                                                                          
+7*7=49                                                                          
+7*8=56                                                                          
+7*9=63                                                                          
+7*10=70                                                                         
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  DECLARE
+  2  num number;
+  3  factorial number;
+  4  FUNCTION fact(x number)
+  5  RETURN number
+  6  IS
+  7  f number;
+  8  BEGIN
+  9  IF x=0 THEN
+ 10  f := 1;
+ 11  ELSE
+ 12  f := x * fact(x-1);
+ 13  END IF;
+ 14  RETURN f;
+ 15  END;
+ 16  BEGIN
+ 17  num:= 6;
+ 18  factorial := fact(num);
+ 19  dbms_output.put_line(' Factorial '|| num || ' is ' || factorial);
+ 20* END;
+SQL> /
+Factorial 6 is 720                                                              
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off;
+
+
+
+
+SQL> DECLARE
+  2  a number;
+  3  b number;
+  4  c number;
+  5  PROCEDURE findMin(x IN number, y IN number, z OUT number) IS
+  6  BEGIN
+  7  IF x < y THEN
+  8  z:= x;
+  9  ELSE
+ 10  z:= y;
+ 11  END IF;
+ 12  END;
+ 13  BEGIN
+ 14  a:= 23;
+ 15  b:= 45;
+ 16  findMin(a, b, c);
+ 17  dbms_output.put_line(' Minimum of (23, 45) : ' || c);
+ 18  END;
+ 19  /
+Minimum of (23, 45) : 23                                                        
+
+PL/SQL procedure successfully completed.
+
+
+
+
+SQL> declare
+  2  a number;
+  3  PROCEDURE squareNum(x IN OUT number) IS
+  4  BEGIN
+  5  x := x * x;
+  6  END;
+  7  BEGIN
+  8  a:= 23;
+  9  squareNum(a);
+ 10  dbms_output.put_line(' Square of (23): ' || a);
+ 11  END;
+ 12  /
+Square of (23): 529                                                             
+
+PL/SQL procedure successfully completed.
+
+
+
+
+SQL> ed
+Wrote file afiedt.buf
+
+  1  declare
+  2  	cursor cursor_empname (dept_no number) 
+  3  	is
+  4  	select ename from emp where deptno=dept_no order by ename;
+  5  	emp_name emp.ename%TYPE;
+  6  begin
+  7  	open cursor_empname(20);
+  8  	loop
+  9  		fetch cursor_empname into emp_name;
+ 10  		exit when cursor_empname%NOTFOUND;
+ 11  		dbms_output.put_line(emp_name);
+ 12  	end loop;
+ 13  	close cursor_empname;
+ 14* end;
+ 15  /
+	select ename from emp where deptno=dept_no order by ename;
+	                  *
+ERROR at line 4:
+ORA-06550: line 4, column 20: 
+PL/SQL: ORA-00942: table or view does not exist 
+ORA-06550: line 4, column 2: 
+PL/SQL: SQL Statement ignored 
+ORA-06550: line 5, column 11: 
+PLS-00201: identifier 'EMP.ENAME' must be declared 
+ORA-06550: line 5, column 11: 
+PL/SQL: Item ignored 
+ORA-06550: line 9, column 29: 
+PLS-00320: the declaration of the type of this expression is incomplete or 
+malformed 
+ORA-06550: line 9, column 3: 
+PL/SQL: SQL Statement ignored 
+ORA-06550: line 11, column 24: 
+PLS-00320: the declaration of the type of this expression is incomplete or 
+malformed 
+ORA-06550: line 11, column 3: 
+PL/SQL: Statement ignored
+
+SQL> spool off
